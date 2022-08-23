@@ -83,7 +83,7 @@ W = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 H = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 out = cv2.VideoWriter(
-    output_video, cv2.VideoWriter_fourcc(*'MPEG'), fps, (W, H))
+    output_video, cv2.VideoWriter_fourcc(*'XVID'), fps, (W, H))
 
 total_number_of_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 frame_number = 1
@@ -108,7 +108,7 @@ with torch.no_grad():
         print("frame " + str(frame_number) +
               " of " + str(total_number_of_frames))
         frame_number += 1
-        if not success or frame_number > 150:
+        if not success:
             break
 
         # Detection Stage #
@@ -127,12 +127,13 @@ with torch.no_grad():
             image = cv2.rectangle(image, start_point, end_point, colors[index % len(colors)], 4)
             cv2.putText(image, str(ids[index]), (x_min - 5, y_min - 5), cv2.FONT_HERSHEY_SIMPLEX,
                         3, (0, 255, 0), 4)
-            cv2.putText(image, str(frame_number), (30, 120), cv2.FONT_HERSHEY_SIMPLEX,
-                        3, (255, 0, 0), 4)
             print(str(frame_number) + " " + str(ids[index]) + " " + str(b))
             data_file.write(str(frame_number) + "," + str(ids[index]) + ","
                             + str(b[0]) + "," + str(b[1]) + "," + str(b[2]) + "," + str(b[3]))
             data_file.write("\n")
+
+        cv2.putText(image, str(frame_number), (30, 120), cv2.FONT_HERSHEY_SIMPLEX,
+                    3, (255, 0, 0), 4)
         out.write(image)
         # print(ids)
     out.release()
