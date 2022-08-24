@@ -68,9 +68,9 @@ args = vars(opt)
 
 colors = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (125, 128, 0), (0, 128, 128), (128, 0, 128)]
 
-input_video = './videos/VID2.mp4'
-output_video = './videos/VID2_output.mp4'
-result_text = './videos/results.txt'
+input_video = './test_videos/test1/vid1.mp4'
+output_video = './test_videos/test1/vid1_output.mp4'
+result_text = './test_videos/test1/results.txt'
 
 if os.path.exists(result_text):
     os.remove(result_text)
@@ -83,7 +83,7 @@ W = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 H = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 out = cv2.VideoWriter(
-    output_video, cv2.VideoWriter_fourcc(*'H265'), fps, (W, H))
+    output_video, cv2.VideoWriter_fourcc(*'H265'), fps, (640, 320))
 
 total_number_of_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 frame_number = 1
@@ -124,16 +124,17 @@ with torch.no_grad():
             end_point = (x_max, y_max)
 
             index = boxes.index(b)
-            image = cv2.rectangle(image, start_point, end_point, colors[index % len(colors)], 4)
+            image = cv2.rectangle(image, start_point, end_point, colors[index % len(colors)], 6)
             cv2.putText(image, str(ids[index]), (x_min - 5, y_min - 5), cv2.FONT_HERSHEY_SIMPLEX,
-                        3, (0, 255, 0), 4)
+                        3, (0, 255, 0), 6)
             print(str(frame_number) + " " + str(ids[index]) + " " + str(b))
             data_file.write(str(frame_number) + "," + str(ids[index]) + ","
                             + str(b[0]) + "," + str(b[1]) + "," + str(b[2]) + "," + str(b[3]))
             data_file.write("\n")
 
         cv2.putText(image, str(frame_number), (30, 120), cv2.FONT_HERSHEY_SIMPLEX,
-                    3, (255, 0, 0), 4)
+                    3, (255, 0, 0), 6)
+        image = cv2.resize(image, (640, 320), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
         out.write(image)
         # print(ids)
     out.release()
