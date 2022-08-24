@@ -83,7 +83,7 @@ W = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 H = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 out = cv2.VideoWriter(
-    output_video, cv2.VideoWriter_fourcc(*'XVID'), fps, (W, H))
+    output_video, cv2.VideoWriter_fourcc(*'H265'), fps, (W, H))
 
 total_number_of_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 frame_number = 1
